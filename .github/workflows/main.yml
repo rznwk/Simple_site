@@ -1,0 +1,17 @@
+on:
+  push:
+    branches:
+      - main  # Срабатывает только на push в main
+
+jobs:
+  deploy:
+    runs-on: self-hosted  # Использует ваш runner на VM1
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4  # Pull'ит свежий код из repo в рабочую директорию runner'а
+
+      - name: Build and Deploy Docker
+        run: |
+          docker-compose build
+          docker-compose up -d --force-recreate  # Rebuild и redeploy
