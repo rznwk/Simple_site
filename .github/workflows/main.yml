@@ -13,6 +13,7 @@ jobs:
 
       - name: Build and Deploy Docker
         run: |
-          docker-compose down
+          docker-compose down 
+          docker rm -f mydocker-web
           docker-compose build
           docker-compose up -d --force-recreate  # Rebuild и redeploy
