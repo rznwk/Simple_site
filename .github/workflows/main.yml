@@ -11,9 +11,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4  # Pull'ит свежий код из repo в рабочую директорию runner'а
 
+      - name: Clean Up Old Containers
+        run: |
+          docker-compose down -v --remove-orphans || true  # Полная очистка, игнорирует ошибки
+          docker rm -f static-site-container || true  # Удаляем конкретный контейнер, если существует
+
       - name: Build and Deploy Docker
         run: |
-          docker-compose down 
-          docker rm -f mydocker-web
-          docker-compose build
-          docker-compose up -d --force-recreate  # Rebuild и redeploy
+          docker-compose build --no-cache  # Rebuild без кэша для свежести
+          docker-compose up -d --force-recreate --build  # Rebuild и redeploy с force
